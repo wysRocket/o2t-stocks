@@ -13,6 +13,7 @@ import {
 const Chart = ({ data }) => {
   const flatten = data.map((i) => i.stocks);
   console.log(flatten);
+
   return (
     <LineChart
       width={730}
