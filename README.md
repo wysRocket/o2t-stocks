@@ -1,8 +1,10 @@
 # Run
 
-"scripts": {
-"start": "react-scripts start",
-"server": "node server/server.js"
+```javascript
+scripts: {
+start: yarn start,
+server: node server/server.js
+```
 
 # Query
 
