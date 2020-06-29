@@ -14,7 +14,7 @@ const Chart = ({ data }) => {
   return (
     <LineChart
       width={730}
-      height={250}
+      height={350}
       data={data}
       margin={{ top: 30, right: 5, left: 30, bottom: 15 }}
     >

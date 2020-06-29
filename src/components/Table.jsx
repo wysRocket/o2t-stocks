@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export const Table = ({ data, updateStockValue }) => {
+export const Table = ({ data, updateStockValue, toggleFetchUpdates }) => {
   return (
     <table className="table table-bordered table-responsive">
       <tbody>
@@ -14,6 +14,7 @@ export const Table = ({ data, updateStockValue }) => {
                 key={i.index}
                 index={i.index}
                 updateStockValue={updateStockValue}
+                toggleFetchUpdates={toggleFetchUpdates}
               />
             );
           })}
@@ -28,6 +29,7 @@ export const Table = ({ data, updateStockValue }) => {
                 key={i.index}
                 index={i.index}
                 updateStockValue={updateStockValue}
+                toggleFetchUpdates={toggleFetchUpdates}
               />
             );
           })}
@@ -37,18 +39,28 @@ export const Table = ({ data, updateStockValue }) => {
   );
 };
 
-const Cell = ({ stockName, index, value, updateStockValue }) => {
+const Cell = ({
+  stockName,
+  index,
+  value,
+  updateStockValue,
+  toggleFetchUpdates,
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [stockValue, setStockValue] = useState(value);
 
+  useEffect(() => {
+    setStockValue(value);
+  }, [value]);
+
   const activateEditMode = () => {
     setEditMode(true);
+    toggleFetchUpdates(false);
   };
 
   const deactivateEditMode = () => {
     setEditMode(false);
-    console.log({ index, property: { stockValue } });
-    updateStockValue({ index, stockName: stockValue });
+    updateStockValue(index, stockName, stockValue);
   };
 
   const onStockValueChange = (e) => {

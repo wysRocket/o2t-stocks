@@ -5,10 +5,7 @@ const instance = axios.create({
 });
 
 export const stocksAPI = {
-  getAllData() {
-    return instance.get();
-  },
-  getLastTen() {
-    return instance.get(`?count=10`);
+  fetchData() {
+    return instance.get(`?count=20`);
   },
 };

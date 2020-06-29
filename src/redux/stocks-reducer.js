@@ -2,11 +2,15 @@ import { stocksAPI } from "../api/api";
 
 const SET_STOCKS = "SET_STOCKS";
 const UPDATE_STOCK_VALUE = "UPDATE_STOCK_VALUE";
+const TOGGLE_FETCH_UPDATES = "TOGGLE_FETCH_UPDATES";
 
-let initialState = {
-  data: [],
-};
-export const stocksReducer = (state = initialState, action) => {
+export const stocksReducer = (
+  state = {
+    data: [],
+    fetchUpdates: true,
+  },
+  action
+) => {
   switch (action.type) {
     case SET_STOCKS: {
       return {
@@ -24,34 +28,38 @@ export const stocksReducer = (state = initialState, action) => {
         ...state,
         data: state.data.map((o) => {
           if (o.index === action.index) {
-            return { ...o, ...action.stockValue };
+            return {
+              ...o,
+              [action.stockName]: action.stockValue,
+            };
           }
           return o;
         }),
       };
     }
-
+    case TOGGLE_FETCH_UPDATES: {
+      return { ...state, fetchUpdates: action.fetchUpdates };
+    }
     default:
       return state;
   }
 };
 
 export const setStocks = (payload) => ({ type: SET_STOCKS, payload });
-export const updateStockValue = (payload) => ({
+export const updateStockValue = (index, stockName, stockValue) => ({
   type: UPDATE_STOCK_VALUE,
-  payload,
+  index,
+  stockName,
+  stockValue,
+});
+export const toggleFetchUpdates = (fetchUpdates) => ({
+  type: TOGGLE_FETCH_UPDATES,
+  fetchUpdates,
 });
 
-export const getAllData = () => async (dispatch) => {
+export const fetchData = () => async (dispatch) => {
   try {
-    const response = await stocksAPI.getAllData();
-    dispatch(setStocks(response.data));
-  } catch (error) {}
-};
-
-export const getLastTen = () => async (dispatch) => {
-  try {
-    const response = await stocksAPI.getLastTen();
+    const response = await stocksAPI.fetchData();
     dispatch(setStocks(response.data));
   } catch (error) {}
 };

@@ -2,21 +2,38 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Table } from "../components/Table";
 import {
-  getAllData,
-  getLastTen,
+  fetchData,
   updateStockValue,
+  toggleFetchUpdates,
 } from "../redux/stocks-reducer";
 
-const TableContainer = ({ data, getAllData, getLastTen, updateStockValue }) => {
+const TableContainer = ({
+  data,
+  fetchUpdates,
+  fetchData,
+  updateStockValue,
+  toggleFetchUpdates,
+}) => {
   useEffect(() => {
-    getLastTen();
+    if (fetchUpdates) {
+      setInterval(() => {
+        fetchData();
+      }, 1000);
+    }
   }, []);
-  return <Table data={data} updateStockValue={updateStockValue} />;
+  return (
+    <Table
+      data={data}
+      updateStockValue={updateStockValue}
+      toggleFetchUpdates={toggleFetchUpdates}
+    />
+  );
 };
 
 export default connect(
   ({ stocks }) => ({
     data: stocks.data,
+    fetchUpdates: stocks.fetchUpdates,
   }),
-  { getAllData, getLastTen, updateStockValue }
+  { fetchData, updateStockValue, toggleFetchUpdates }
 )(TableContainer);
