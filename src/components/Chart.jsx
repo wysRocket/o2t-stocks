@@ -11,9 +11,6 @@ import {
 } from "recharts";
 
 const Chart = ({ data }) => {
-  const flatten = data.map((i) => i.stocks);
-  console.log(flatten);
-
   return (
     <LineChart
       width={730}
@@ -26,8 +23,8 @@ const Chart = ({ data }) => {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Line type="monotone" dataKey="stocks.CAC40" stroke="#8884d8" />
-      <Line type="monotone" dataKey="stocks.NASDAQ" stroke="#82ca9d" />
+      <Line type="monotone" dataKey="CAC40" stroke="#8884d8" />
+      <Line type="monotone" dataKey="NASDAQ" stroke="#82ca9d" />
     </LineChart>
   );
 };

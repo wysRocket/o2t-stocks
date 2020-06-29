@@ -1,33 +1,33 @@
 import { stocksAPI } from "../api/api";
 
 const SET_STOCKS = "SET_STOCKS";
+const UPDATE_STOCK_VALUE = "UPDATE_STOCK_VALUE";
 
 let initialState = {
-  data: [
-    {
-      timestamp: 1457372998901,
-      index: 0,
-      stocks: {
-        NASDAQ: 14.362588925287127,
-        CAC40: 7.564775763312355,
-      },
-    },
-    {
-      timestamp: 1457372999903,
-      index: 1,
-      stocks: {
-        NASDAQ: 13.27388069476001,
-        CAC40: 13.011122498428449,
-      },
-    },
-  ],
+  data: [],
 };
 export const stocksReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_STOCKS: {
       return {
         ...state,
-        data: action.payload,
+        data: action.payload.map((i) => ({
+          timestamp: i.timestamp,
+          index: i.index,
+          NASDAQ: i.stocks.NASDAQ.toFixed(2),
+          CAC40: i.stocks.CAC40.toFixed(2),
+        })),
+      };
+    }
+    case UPDATE_STOCK_VALUE: {
+      return {
+        ...state,
+        data: state.data.map((o) => {
+          if (o.index === action.index) {
+            return { ...o, ...action.stockValue };
+          }
+          return o;
+        }),
       };
     }
 
@@ -37,11 +37,21 @@ export const stocksReducer = (state = initialState, action) => {
 };
 
 export const setStocks = (payload) => ({ type: SET_STOCKS, payload });
+export const updateStockValue = (payload) => ({
+  type: UPDATE_STOCK_VALUE,
+  payload,
+});
+
+export const getAllData = () => async (dispatch) => {
+  try {
+    const response = await stocksAPI.getAllData();
+    dispatch(setStocks(response.data));
+  } catch (error) {}
+};
 
 export const getLastTen = () => async (dispatch) => {
   try {
-    let response = await stocksAPI.getLastTen();
-    console.log(response.data);
+    const response = await stocksAPI.getLastTen();
     dispatch(setStocks(response.data));
   } catch (error) {}
 };
