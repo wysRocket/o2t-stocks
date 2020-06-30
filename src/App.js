@@ -4,7 +4,7 @@ import TableContainer from "./containers/TableContainer";
 
 export function App() {
   return (
-    <div className="App">
+    <div>
       <Chart />
       <TableContainer />
     </div>

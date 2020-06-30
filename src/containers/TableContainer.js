@@ -16,11 +16,10 @@ const TableContainer = ({
 }) => {
   useEffect(() => {
     if (fetchUpdates) {
-      setInterval(() => {
-        fetchData();
-      }, 1000);
+      let id = setInterval(fetchData, 1000);
+      return () => clearInterval(id);
     }
-  }, []);
+  }, [fetchUpdates]);
   return (
     <Table
       data={data}

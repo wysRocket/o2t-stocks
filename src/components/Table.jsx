@@ -61,6 +61,7 @@ const Cell = ({
   const deactivateEditMode = () => {
     setEditMode(false);
     updateStockValue(index, stockName, stockValue);
+    toggleFetchUpdates(true);
   };
 
   const onStockValueChange = (e) => {

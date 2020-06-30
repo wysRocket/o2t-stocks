@@ -3,11 +3,13 @@ import { stocksAPI } from "../api/api";
 const SET_STOCKS = "SET_STOCKS";
 const UPDATE_STOCK_VALUE = "UPDATE_STOCK_VALUE";
 const TOGGLE_FETCH_UPDATES = "TOGGLE_FETCH_UPDATES";
+const HANDLE_ERROR = "HANDLE_ERROR";
 
 export const stocksReducer = (
   state = {
     data: [],
     fetchUpdates: true,
+    error: "",
   },
   action
 ) => {
@@ -40,6 +42,9 @@ export const stocksReducer = (
     case TOGGLE_FETCH_UPDATES: {
       return { ...state, fetchUpdates: action.fetchUpdates };
     }
+    case HANDLE_ERROR: {
+      return { ...state, error: action.error.message };
+    }
     default:
       return state;
   }
@@ -56,10 +61,13 @@ export const toggleFetchUpdates = (fetchUpdates) => ({
   type: TOGGLE_FETCH_UPDATES,
   fetchUpdates,
 });
+export const handleError = (error) => ({ type: HANDLE_ERROR, error });
 
 export const fetchData = () => async (dispatch) => {
   try {
     const response = await stocksAPI.fetchData();
     dispatch(setStocks(response.data));
-  } catch (error) {}
+  } catch (error) {
+    dispatch(handleError(error));
+  }
 };
