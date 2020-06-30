@@ -43,7 +43,7 @@ export const stocksReducer = (
       return { ...state, fetchUpdates: action.fetchUpdates };
     }
     case HANDLE_ERROR: {
-      return { ...state, error: action.error.message };
+      return { ...state, error: action.error };
     }
     default:
       return state;
@@ -67,7 +67,8 @@ export const fetchData = () => async (dispatch) => {
   try {
     const response = await stocksAPI.fetchData();
     dispatch(setStocks(response.data));
+    dispatch(handleError(""));
   } catch (error) {
-    dispatch(handleError(error));
+    dispatch(handleError(error.message));
   }
 };
