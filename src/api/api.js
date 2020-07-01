@@ -6,6 +6,6 @@ const instance = axios.create({
 
 export const stocksAPI = {
   fetchData() {
-    return instance.get(`?count=20`);
+    return instance.get(`?count=1`);
   },
 };

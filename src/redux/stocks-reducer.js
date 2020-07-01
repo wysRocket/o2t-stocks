@@ -1,6 +1,6 @@
 import { stocksAPI } from "../api/api";
 
-const SET_STOCKS = "SET_STOCKS";
+const SET_STOCK = "SET_STOCK";
 const UPDATE_STOCK_VALUE = "UPDATE_STOCK_VALUE";
 const TOGGLE_FETCH_UPDATES = "TOGGLE_FETCH_UPDATES";
 const HANDLE_ERROR = "HANDLE_ERROR";
@@ -14,15 +14,13 @@ export const stocksReducer = (
   action
 ) => {
   switch (action.type) {
-    case SET_STOCKS: {
+    case SET_STOCK: {
       return {
         ...state,
-        data: action.payload.map((i) => ({
-          timestamp: i.timestamp,
-          index: i.index,
-          NASDAQ: i.stocks.NASDAQ.toFixed(2),
-          CAC40: i.stocks.CAC40.toFixed(2),
-        })),
+        data:
+          state.data.length === 20
+            ? [...state.data.splice(1, 19), ...action.payload]
+            : [...state.data, ...action.payload],
       };
     }
     case UPDATE_STOCK_VALUE: {
@@ -50,7 +48,8 @@ export const stocksReducer = (
   }
 };
 
-export const setStocks = (payload) => ({ type: SET_STOCKS, payload });
+export const setStock = (payload) => ({ type: SET_STOCK, payload });
+
 export const updateStockValue = (index, stockName, stockValue) => ({
   type: UPDATE_STOCK_VALUE,
   index,
@@ -66,7 +65,15 @@ export const handleError = (error) => ({ type: HANDLE_ERROR, error });
 export const fetchData = () => async (dispatch) => {
   try {
     const response = await stocksAPI.fetchData();
-    dispatch(setStocks(response.data));
+
+    const payload = response.data.map((i) => ({
+      timestamp: i.timestamp,
+      index: i.index,
+      NASDAQ: i.stocks.NASDAQ.toFixed(2),
+      CAC40: i.stocks.CAC40.toFixed(2),
+    }));
+
+    dispatch(setStock(payload));
     dispatch(handleError(""));
   } catch (error) {
     dispatch(handleError(error.message));
